@@ -32,9 +32,12 @@ recommendation to use `pip`
 ```sh
 pip install ldetect
 ```
+
 This installs the LDetect software, as well as downloading a set of
 example scripts that can be used to perform many of the required
-steps. We also used [bcftools](http://www.htslib.org/download/) to process the VCF files.
+steps. We also used [bcftools](http://www.htslib.org/download/) and
+[tabix](http://www.htslib.org/download/) which is part of htslib, to
+process the VCF files.
 
 
 ## Parse data <a name="parseit"/>
