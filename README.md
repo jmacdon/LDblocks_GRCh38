@@ -49,7 +49,7 @@ SPH. This map file contains all chromosomes, but LDetect requires the
 genetic maps to be by-chromosome and gzipped, so we did
 
 ```sh
-awk '{if($1 !~ /chrom/) print $1"\t"$2"\t"$4 > $1_tab}' genetic_map_GRCh38_merged.tab
+awk '{if($1 !~ /chrom/) print $1"\t"$2"\t"$4 > $1.tab}' genetic_map_GRCh38_merged.tab
 ```
 and then gzipped the resulting files. The VCF files
 and the map files have to contain the same positions, or at least the
@@ -67,7 +67,8 @@ bcftools view -R chr1 \
 
 This takes an inordinate amount of time, so we parallelized by using
 the script called `subsetByChr.sh` which can be found in the scripts
-directory, which processes all chromosomes at one time. The
+directory of this repository (as can all other scripts mentioned in
+this README), which processes all chromosomes at one time. The
 `subsetByChr.sh` script also indexes the resulting VCF files.
 
 
@@ -89,7 +90,7 @@ python3 P00_00_partition_chromosome.py <genetic_map> <n_individuals> <output_fil
 Because each step is fast, we did it sequentially:
 
 ```sh
-for f in *.gz; do python3 P00_00_partition_chromosome.py $f 379 scripts/${f/.tab.gz/}_partitions; done
+for f in chr{1..22}.tab.gz; do python3 P00_00_partition_chromosome.py $f 379 scripts/${f/.tab.gz/}_partitions; done
 ```
 Note that the example scripts expect things to be in a `scripts/`
 directory, so we followed that convention. The next step is to use
@@ -129,20 +130,28 @@ zcat vcfsubsets/chr9.vcf.gz | head -n 30 | awk '$1 ~/#CHR/ {print $0}' \
 cat subjects.txt eurinds.txt | sort | uniq -d > tmp.txt; mv tmp.txt eurinds.txt
 
 ```
+
+The first line simply captures the subject IDs in a VCF (they all have
+the same IDs) and the second returns all the European subject IDs that
+are found in both the VCFs and the IDs we got from 1000Genomes.
+
 We then computed all the correlation values in parallel using
 `runAllCov.sh` which can be found in the scripts directory.
 
 ```sh
 runAllCov.sh eurinds.txt EUR 11418
 ```
-The 11418 is the effective size for Europeans. We used 17469 and 14269
-for Africans and Asians, respectively.
+
+The final argument for that script (11418) is the effective population
+size for Europeans. We used 17469 and 14269 for Africans and Asians,
+respectively.
 
 There are three more steps; convert the covariance matrices into
 vectors, calculate the minima across the covariance matrices, and then
-extract the minima (which are output as python .pickle files) as .bed
-files. We used three scripts to parallelize these steps (which are steps
-3-5 in the LDetect example). As an example for the European ancestry:
+extract the minima (which are output as python .pickle files) into .bed
+files. We used three scripts to parallelize these steps (which are
+steps 3-5 in the LDetect example). As an example for the European
+ancestry:
 
 ```sh
 
