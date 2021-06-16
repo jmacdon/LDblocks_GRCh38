@@ -1,4 +1,4 @@
-#LDblocks_GRCh38 <a name="top"/>
+# LDblocks_GRCh38 <a name="top"/>
 
 The goal of the code in this repository is to generate approximately
 independent LD blocks for European, Asian, and African ancestries
