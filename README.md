@@ -12,7 +12,7 @@ portions across different chromosomes.
 Instead, we use
 [LDetect](https://bitbucket.org/nygcresearch/ldetect/src/master/) to
 generate new LD blocks, using GRCh38-based [1000Genomes
-data](ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/release/20181203_biallelic_SNV/)
+data](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/release/20181203_biallelic_SNV/)
 and [recombination maps that have been lifted over to
 GRCh38](http://csg.sph.umich.edu/locuszoom/download/recomb-hg38.tar.gz).
 
