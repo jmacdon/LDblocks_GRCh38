@@ -18,18 +18,39 @@ GRCh38](http://csg.sph.umich.edu/locuszoom/download/recomb-hg38.tar.gz).
 
 
 ### Table of contents
++ [Overview](#justreaditdude)
 + [Pipeline prep](#pipelineprep)
 + [Parse data](#parseit)
 + [Process data](#processit)
 + [Technical addendum](#ughbro)
 
+## Overview <a name=justreaditdude/>
+
+A high level summary of the process that we used is as follows:
+
++ Install LDetect and bcftools/tabix
++ Download and parse the GRCh38 genetic maps as well as the
+  1000Genomes VCF files
+  + Bash code below
+  + subsetByChr.sh script (in scripts dir of this repository)
++ Generate LD blocks for each ancestry separately, using a set of batch
+  scripts
+  + Partition chromosomes (bash code below)
+  + Calculate covariance matrices (runAllCov.sh in scripts dir)
+  + Convert covariance matrices to vector (runStep3.sh in scripts dir)
+  + Calculate minima (runStep4.sh in scripts dir)
+  + Output bed files (runStep5.sh in scripts dir)
+  
+
 ## Pipeline prep <a name="pipelineprep"/>
 
 These data were generated on a Linux cluster, as it is beneficial to
-parallelize many of the steps. We installed LDetect following the
-recommendation to use `pip`
+parallelize many of the steps. We installed LDetect in a virtualenv
+called 'env' following the recommendation to use `pip`
 
 ```sh
+virtualenv env
+source env/bin/activate
 pip install ldetect
 ```
 
@@ -234,11 +255,26 @@ not worth going into. Suffice it to say that lines 103-105 in
     flat.print_log_msg('Global metric:')
     print_metric(metric_out_uniform_local_search)
 ```
-And commenting out those lines will bypass the bug. And
-commenting out everything from line 93-105 will accomplish what the
-LDetect authors meant by 'remove all but the
-low-pass filter with local search algorithm', which will bypass the
-bug and also reduce the computational expense.
+And commenting out those lines will bypass the bug. To follow the
+recommendation from the LDetect authors ('remove all but the low-pass
+filter...'), one would also comment out lines 67-78:
+
+```python
+
+# METRIC FOR UNIFORM BREAKPOINTS
+flat.print_log_msg('* Calculating metric for uniform breakpoints...')
+# step = int((end-begin)/(len(breakpoint_loci)+1))
+# breakpoint_loci_uniform = [l for l in range(begin+step, end-step+1, step)] 
+step = int(len(init_array_x)/(len(breakpoint_loci)+1))
+breakpoint_loci_uniform = [init_array_x[i] for i in range(step, len(init_array_x)-step+1, step)]
+
+# metric_out_uniform = apply_metric(chr_name, begin, end, cnst.const[dataset], breakpoint_loci_uniform)
+metric_out_uniform = apply_metric(chr_name, begin, end, config, breakpoint_loci_uniform)
+flat.print_log_msg('Global metric:')
+print_metric(metric_out_uniform)
+
+```
+
 
 Fourth, the bug mentioned above has to do with `None` values in the
 minima results at the beginning and the end of the individual blocks
