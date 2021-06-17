@@ -251,9 +251,11 @@ not worth going into. Suffice it to say that lines 103-105 in
 `P02_minima_pipeline.py` look like this:
 
 ```python
-    metric_out_uniform_local_search = apply_metric(chr_name, begin, end, config, breakpoint_loci_uniform_local_search['loci'])
-    flat.print_log_msg('Global metric:')
-    print_metric(metric_out_uniform_local_search)
+
+metric_out_uniform_local_search = apply_metric(chr_name, begin, end, config, breakpoint_loci_uniform_local_search['loci'])
+flat.print_log_msg('Global metric:')
+print_metric(metric_out_uniform_local_search)
+
 ```
 And commenting out those lines will bypass the bug. To follow the
 recommendation from the LDetect authors ('remove all but the low-pass
