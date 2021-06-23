@@ -310,7 +310,7 @@ data directory of this repository).
 ```sh
 
 awk '!/None/ {print $0}' chr1.bed > EUR_LD_blocks.bed
-for $f in chr{2..22}.bed; do tail -n +2 $f | awk '!/None/ {print $0}' >> EUR_LD_blocks.bed; done
+for f in chr{2..22}.bed; do tail -n +2 $f | awk '!/None/ {print $0}' >> EUR_LD_blocks.bed; done
 
 ```
 
