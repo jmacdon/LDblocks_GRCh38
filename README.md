@@ -181,9 +181,9 @@ ancestry:
 
 ```sh
 
-runStep3.sh EUR
-runStep4.sh EUR
-runStep5.sh EUR
+qsub ./runStep3.sh EUR
+qsub ./runStep4.sh EUR
+qsub ./runStep5.sh EUR
 
 ``` 
 
