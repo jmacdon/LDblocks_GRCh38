@@ -304,13 +304,20 @@ Where the end of the first block and the beginning of the second block
 have `None` values.
 
 We concatenated all the chromosome-wise .bed files into a genome-wide
-.bed using the following bash script (these are the .bed files in the
-data directory of this repository).
+.bed, at the same time removing the None values. The above .bed file
+is converted to this:
 
 ```sh
 
-awk '!/None/ {print $0}' chr1.bed > EUR_LD_blocks.bed
-for f in chr{2..22}.bed; do tail -n +2 $f | awk '!/None/ {print $0}' >> EUR_LD_blocks.bed; done
+chr      start           stop
+chr1     3944985         3956874
+chr1     3956874         3983456
+chr1     3983456         4017621
+chr1     4017621         4072066
+chr1     4072066         4107225
+chr1     4107225         4134537
+chr1     4134537         4180801
+chr1     4180801         4190873
 
 ```
 
