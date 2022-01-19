@@ -9,6 +9,6 @@
 ## e.g., qsub ./runStep3.sh EUR
 pop=$1
 
-source env/bin/activate
+source ../env/bin/activate
 
-python3 P01_matrix_to_vector_pipeline.py --dataset_path="$pop"/ --name=chr"$SGE_TASK_ID" --out_fname="$pop"/chr"$SGE_TASK_ID".vector.txt.gz
+python3 ../P01_matrix_to_vector_pipeline.py --dataset_path="$pop"/ --name=chr"$SGE_TASK_ID" --out_fname="$pop"/chr"$SGE_TASK_ID".vector.txt.gz

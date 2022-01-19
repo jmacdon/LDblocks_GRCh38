@@ -3,10 +3,10 @@
 #$ -q lindstroem.q
 #$ -cwd
 #$ -l h_vmem=20G
-#$ -t 1-CHANGEME
+#$ -t START-END
 
 
-source venv/bin/activate
+source ../venv/bin/activate
 export PYTHONPATH=/projects/lindstroem/.py-site-packages/
 
 fn=$1
@@ -24,4 +24,4 @@ start=${inline[0]}
 stop=${inline[1]}
 
 
-tabix -h "$vcf" "$chr":"$start"-"$stop" | python3 P00_01_calc_covariance.py "$map" "$indfile" "$popsize" 1e-7 "$pop"/"$chr"/"$chr"."$start"."$stop".gz 
+tabix -h "$vcf" "$chr":"$start"-"$stop" | python3 ../P00_01_calc_covariance.py "$map" "$indfile" "$popsize" 1e-7 "$pop"/"$chr"/"$chr"."$start"."$stop".gz 

@@ -11,9 +11,9 @@
 pop=$1
 nsnps=$2
 
-source env/bin/activate
+source ../env/bin/activate
 
-python3 P02_minima_pipeline.py \
+python3 ../P02_minima_pipeline.py \
 	--input_fname="$pop"/chr"$SGE_TASK_ID".vector.txt.gz \
 	--chr_name=chr"$SGE_TASK_ID" \
 	--dataset_path="$pop"/ \

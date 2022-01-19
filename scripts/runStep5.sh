@@ -11,9 +11,9 @@
 
 pop=$1
 
-source env/bin/activate
+source ../env/bin/activate
 
-python3 P03_extract_bpoints.py \
+python3 ../P03_extract_bpoints.py \
 	--name=chr"$SGE_TASK_ID" \
 	--subset=fourier_ls  \
 	--dataset_path="$pop"/ \
