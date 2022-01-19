@@ -14,8 +14,7 @@ Instead, we use
 generate new LD blocks, using GRCh38-based [1000Genomes
 data](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/release/20181203_biallelic_SNV/)
 and new sex-averaged dense recombination rate data from [deCode
-Genetics]
-(https://www.science.org/doi/suppl/10.1126/science.aau1043/suppl_file/aau1043_datas3.gz).
+Genetics](https://www.science.org/doi/suppl/10.1126/science.aau1043/suppl_file/aau1043_datas3.gz).
 
 
 ### Table of contents
