@@ -31,9 +31,20 @@
 ## Any position < first DeCODE position gets a 0, and any position > last DeCODE position gets the max cM value
 
 
-library(GenomicRanges)
+if(!require("GenomicRanges", character.only = TRUE, quietly = TRUE)){
+    install.packages("BiocManager", repos = "https://cloud.r-project.org/")
+    require("BiocManager", character.only = TRUE, quietly = TRUE)
+    BiocManager::install("GenomicRanges")
+}
+
+## Assumes this file has been downloaded.
+## if not get it.
+if(!file.exists("aau1043_datas3.gz"))
+    download.file("https://www.science.org/doi/suppl/10.1126/science.aau1043/suppl_file/aau1043_datas3.gz",
+                  "aau1043_datas3.gz")
 decode <- read.table("aau1043_datas3.gz", header = TRUE)
 
+## Assuming subsetted VCF files are in a subdir called 'vcfsubsets'
 getPos <- function(chr){
     file <- paste0("vcfsubsets/", chr, ".vcf.gz")
     pos <- system(paste("zcat", file, "| awk '$1 !~ /#/ {print $2}'"), intern = TRUE)

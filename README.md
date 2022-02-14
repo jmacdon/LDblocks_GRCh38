@@ -33,8 +33,7 @@ A high level summary of the process that we used is as follows:
   + Bash code below
   + subsetVcf.sh script (in scripts dir of this repository)
 + Interpolate deCode recombination rates onto 1000G variants
-+ Generate LD blocks for each ancestry separately, using a set of batch
-  scripts
++ Generate LD blocks using a set of batch scripts
   + Partition chromosomes (bash code below)
   + Calculate covariance matrices (runAllCov.sh in scripts dir)
   + Convert covariance matrices to vector (runStep3.sh in scripts dir)
@@ -94,7 +93,10 @@ deCode genetic map file using an R script (interpolate.R), which
 generates the expected format for LDetect. This file is self-contained
 and can be called at the command line, using `R --vanilla <
 interpolate.R` to output gzipped genetic map files for each
-chromosome.
+chromosome. If the Bioconductor `GenomicFeatures` package is not
+installed, it will be automatically installed. In addition, if the
+deCode data are not in the working directory, they will be downloaded
+automatically. 
 
 
 
@@ -149,9 +151,10 @@ cat subjects.txt eurinds.txt | sort | uniq -d > tmp.txt; mv tmp.txt eurinds.txt
 
 ```
 
-The first line simply captures the subject IDs in a VCF (they all have
-the same IDs) and the second returns all the European subject IDs that
-are found in both the VCFs and the IDs we got from 1000Genomes.
+The first line simply captures the subject IDs from one of the VCF
+files (they all have the same IDs) and the second returns all the
+European subject IDs that are found in both the VCFs and the IDs we
+got from 1000Genomes.
 
 We then computed all the correlation values in parallel using
 `runAllCov.sh` which can be found in the scripts directory.
@@ -165,6 +168,9 @@ size for Europeans. This script is meant to limit the number of
 processes sent to the compute nodes to 100 or less. The remaining
 processes are held in the queue and sent for processing only after the
 preceding run has finished. 
+
+This step is the most computationally expensive, taking several days
+to finish.
 
 There are three more steps; convert the covariance matrices into
 vectors, calculate the minima across the covariance matrices, and then
