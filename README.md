@@ -1,20 +1,21 @@
 # LDblocks_GRCh38 <a name="top"/>
 
 The goal of the code in this repository is to generate approximately
-independent LD blocks for European genetic ancestries based on the
-GRCh38 genome. While LD blocks currently exist for European genetic
-ancestries (for example [here](https://github.com/bogdanlab/RHOGE)),
-they are based on GRCh37. Methods to convert genetic loci from one
-genome build (notably the UCSC liftOver tool) do not work well for
-genetic blocks, tending to fragment the block and often spreading
-portions across different chromosomes.
+independent LD blocks based on the GRCh38 genome. While there are
+existing LD blocks (for example
+[here](https://github.com/bogdanlab/RHOGE)), they are based on
+GRCh37. Methods to convert genetic loci from one genome build (notably
+the UCSC liftOver tool) do not work well for genetic blocks, tending
+to fragment the block and often spreading portions across different
+chromosomes.
 
 Instead, we use
 [LDetect](https://bitbucket.org/nygcresearch/ldetect/src/master/) to
 generate new LD blocks, using GRCh38-based [1000Genomes
 data](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/release/20181203_biallelic_SNV/)
-and new sex-averaged dense recombination rate data from [deCode
-Genetics](https://www.science.org/doi/suppl/10.1126/science.aau1043/suppl_file/aau1043_datas3.gz).
+and new sex-averaged dense recombination rate data from either [deCode
+Genetics](https://www.science.org/doi/suppl/10.1126/science.aau1043/suppl_file/aau1043_datas3.gz)
+or [pyrho](ttps://github.com/popgenmethods/pyhro) (Spence and Song [2019](https://www.science.org/doi/10.1126/sciadv.aaw9206)).
 
 
 ### Table of contents
@@ -32,8 +33,8 @@ A high level summary of the process that we used is as follows:
 + Download and parse the 1000Genomes VCF files
   + Bash code below
   + subsetVcf.sh script (in scripts dir of this repository)
-+ Interpolate deCode recombination rates onto 1000G variants
-+ Generate LD blocks using a set of batch scripts
++ Interpolate recombination rates onto 1000G variants
++ Generate LD blocks using a set of bash scripts
   + Partition chromosomes (bash code below)
   + Calculate covariance matrices (runAllCov.sh in scripts dir)
   + Convert covariance matrices to vector (runStep3.sh in scripts dir)
@@ -88,15 +89,17 @@ qsub ./subsetVcf.sh
 ```
 
 
-After generating subsetted VCF files, we interpolated data from the
-deCode genetic map file using an R script (interpolate.R), which
-generates the expected format for LDetect. This file is self-contained
-and can be called at the command line, using `R --vanilla <
-interpolate.R` to output gzipped genetic map files for each
-chromosome. If the Bioconductor `GenomicFeatures` package is not
-installed, it will be automatically installed. In addition, if the
-deCode data are not in the working directory, they will be downloaded
-automatically. 
+After generating subsetted VCF files, we interpolated data from deCode
+and pyhro genetic map files using an R script (interpolate.R or
+interpolate_pyrho.R), which generates the expected format for
+LDetect. This file is self-contained and can be called at the command
+line, using `R --vanilla < interpolate.R` (or interpolate_pyhro.R,
+depending on the source data) to output gzipped genetic map files for
+each chromosome. If the Bioconductor `GenomicFeatures` package is not
+installed, it will be automatically installed. If the
+recombination map data are not in the working directory, they will be
+downloaded automatically in the case of deCODE, or an error will be
+issued with a link to manually download and uncompress the pyhro data.
 
 
 
@@ -127,7 +130,7 @@ these partitions to compute the covariance matrix. In other words, we
 want the covariance of the variants within a chromosomal region, for
 those individuals of a given ancestry. The VCF files we have include
 all of the 1000Genomes subjects, and we only want subjects with
-European genetic ancestries. We selected individuals from the
+a given genetic ancestry. For the deCODE data we selected individuals from the
 following sub-populations (TSI, IBS, CEU, GBR) using a bash script:
 
 ```sh
@@ -155,6 +158,19 @@ The first line simply captures the subject IDs from one of the VCF
 files (they all have the same IDs) and the second returns all the
 European subject IDs that are found in both the VCFs and the IDs we
 got from 1000Genomes.
+
+We used similar scripts for the pyhro recombination maps, depending on
+the goal. For sub-population specific LD blocks, we only selected
+those subjects from a given sub-population. For super-population maps,
+we similarly chose all sub-populations within a super-population to
+compute correlations. But do note that we used a single sub-population
+for the genetic map (e.g., for the AFR super-population, we used the
+GWD sub-population genetic map).
+
+For EUR, we omitted FIN, due to large differences between FIN and
+other European ancestries. For AFR we omitted both ASW and ACB due to
+admixture. Block statistics for the four super-populations using pyrho
+recombination maps can be found [here](data/popTables.html).
 
 We then computed all the correlation values in parallel using
 `runAllCov.sh` which can be found in the scripts directory.
@@ -185,7 +201,6 @@ qsub ./runStep4.sh EUR
 qsub ./runStep5.sh EUR
 
 ``` 
-
 
 ## Technical addendum <a name=ughbro/>
 
