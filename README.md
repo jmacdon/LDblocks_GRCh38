@@ -171,7 +171,7 @@ For EUR, we omitted FIN, due to large differences between FIN and
 other European ancestries. For AFR we omitted both ASW and ACB due to
 admixture. Block statistics for the four super-populations using pyrho
 recombination maps can be found
-[here](https://htmlpreview.github.io/?https://github.com/jmacdon/LDblocks_GRCh38/data/popTables.html).
+[here](https://htmlpreview.github.io/?https://github.com/jmacdon/LDblocks_GRCh38/blob/master/data/popTables.html).
 
 We then computed all the correlation values in parallel using
 `runAllCov.sh` which can be found in the scripts directory.
