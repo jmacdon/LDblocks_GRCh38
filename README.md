@@ -202,6 +202,9 @@ qsub ./runStep4.sh EUR
 qsub ./runStep5.sh EUR
 
 ``` 
+As a final step we removed any blocks that overlap any portion of a
+centromere, and then combined any small blocks with < 100 SNPs (there
+were only two, both for AFR) with an adjacent block.
 
 ## Technical addendum <a name=ughbro/>
 
